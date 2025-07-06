@@ -50,14 +50,14 @@ def main():
             if normalized_korean in text_to_audio:
                 sound_filename = text_to_audio[normalized_korean]
                 # Check if the sound field is already set
-                current_sound_field = note['fields'].get('Sound', {}).get('value', '')
+                current_sound_field = note['fields'].get('Audio', {}).get('value', '')
                 new_sound_tag = f'[sound:{sound_filename}]'
 
                 if current_sound_field != new_sound_tag:
                     update = {
                         'id': note['noteId'],
                         'fields': {
-                            'Sound': new_sound_tag
+                            'Audio': new_sound_tag
                         }
                     }
                     updates.append(update)
@@ -68,7 +68,8 @@ def main():
 
     if updates:
         print(f"Updating {len(updates)} notes...")
-        invoke('updateNoteFields', notes=updates)
+        for update in updates:
+            invoke('updateNoteFields', note=update)
         print("Anki notes updated successfully.")
     else:
         print("No notes needed updating.")
